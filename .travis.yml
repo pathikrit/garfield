@@ -4,6 +4,7 @@ scala: 2.11.4
 
 deploy:
   provider: heroku
+  strategy: git
   api_key:
     secure: GG5a1Zt2qXktDQaC9YpssPsG+XFUBts7vCICgDDbbbIv0J1nSfF4S/8Vgmfj+NEc8I+zobkzrbZdITy2Rgw9x1AFDZT6OGfk5WL0t4w92sQgv2A0uQTVDeFFzS1udHiXYVPCPZXhJUmL0fY7DiRG5bKTKQMXGawonf9rubCK318=
   app: garfield-staging
