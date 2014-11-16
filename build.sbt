@@ -32,5 +32,5 @@ libraryDependencies ++= Seq(
   jdbc,
   anorm,
   cache,
-  ws
+  "org.postgresql" % "postgresql" % "9.3-1102-jdbc4"
 )

@@ -26,6 +26,13 @@ Setup
   brew cask install java
   ```
 
++ Install database:
+  ```shell
+  brew install postgresql
+  # Follow instructions from above step
+  createdb main
+  ```
+
 + Clone this repo:
   ```shell
   git clone https://github.com/pathikrit/garfield.git
@@ -42,3 +49,5 @@ TODO
 ---
 
 * Code quality & coverage
+* VersionEye
+* Codegen

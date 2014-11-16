@@ -2,6 +2,12 @@ language: scala
 
 scala: 2.11.4
 
+addons:
+  postgresql: 9.3
+
+before_script:
+  - psql -c 'CREATE DATABASE test;' -U postgres
+
 deploy:
   provider: heroku
   strategy: git
