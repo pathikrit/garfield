@@ -8,3 +8,7 @@ deploy:
   api_key:
     secure: GG5a1Zt2qXktDQaC9YpssPsG+XFUBts7vCICgDDbbbIv0J1nSfF4S/8Vgmfj+NEc8I+zobkzrbZdITy2Rgw9x1AFDZT6OGfk5WL0t4w92sQgv2A0uQTVDeFFzS1udHiXYVPCPZXhJUmL0fY7DiRG5bKTKQMXGawonf9rubCK318=
   app: garfield-staging
+
+notifications:
+  slack:
+    secure: M9y6khIzyumD12YXB8Eewac8+Ci+Qg4zLvxL28l/f7TAdsco79aO/FNWjYRiHYT0e+W0iEeb2V9Ms21oO3Zy7N5c+B90Hy7mzi/n5soKk19mytXUHbirYu/xoqhM3kOJj09MUscp5+HYLxBl7D20H2a/UzfGmBFn85iTWk+rTlc=
