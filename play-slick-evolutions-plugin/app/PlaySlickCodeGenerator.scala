@@ -4,7 +4,7 @@ import play.api._
 import play.api.db.BoneCPPlugin
 import play.api.db.evolutions.Evolutions
 import play.api.Application
-import scala.slick.model.codegen.SourceCodeGenerator
+import scala.slick.codegen.SourceCodeGenerator
 import scala.slick.jdbc.meta.{MTable, createModel}
 import scala.slick.driver.H2Driver.simple._
 import scala.slick.driver.H2Driver
@@ -108,7 +108,7 @@ object PlaySlickCodeGenerator{
       else
       {
         // run evolutions against database
-        Evolutions.applyScript(dbPlugin.api, databaseName, script)
+        Evolutions.applyScript(dbPlugin.api, databaseName, script, autocommit = true)
 
         // get list of tables for which code will be generated
         // also, we exclude the play evolutions table
@@ -190,5 +190,4 @@ class PlaySlickCodeGenerator(model: Model, dbType: String, useJodaTime: Boolean)
     }
 
   }
-
 }
