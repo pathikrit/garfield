@@ -1,9 +1,12 @@
 import com.typesafe.config.{ConfigFactory, Config}
+
 import java.io.File
+
 import play.api._
 import play.api.db.BoneCPPlugin
 import play.api.db.evolutions.Evolutions
 import play.api.Application
+
 import scala.slick.codegen.SourceCodeGenerator
 import scala.slick.jdbc.meta.{MTable, createModel}
 import scala.slick.driver.H2Driver.simple._
