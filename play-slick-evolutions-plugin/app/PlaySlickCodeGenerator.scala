@@ -47,7 +47,7 @@ object PlaySlickCodeGenerator{
 
     // generate source files for each database
     val generatedFiles = databases.flatMap(database =>
-      generateDatabase(outputDir, database, dbConfig.getConfig(database + ".generator").getOrElse(Configuration.empty)))
+      generateDatabase(outputDir, database, dbConfig.getConfig(database + ".codegen").getOrElse(Configuration.empty)))
 
     generatedFiles.toSet
   }
@@ -73,7 +73,7 @@ object PlaySlickCodeGenerator{
     val outputContainer = config.getString("container").getOrElse(defaultContainer)
 
     // expect output profile
-    val outputProfile = config.getString("profile") match {
+    val outputProfile = config.getString(s"profile") match {
       case Some(profile) => profile
       case None => throw new PlayException("Please specify an output profile for the Slick Code Generator",
         s"For example, if you're using MySQL, add\ndb.${databaseName}.generator.profile=scala.slick.driver.MySQLDriver\nto your application.conf")
