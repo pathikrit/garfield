@@ -1,7 +1,7 @@
 import sbt._
 import Keys._
 
-object PlaySlickPlugin extends Plugin {
+object PlaySlickEvolutionsCodegenPlugin extends Plugin {
 
   /**
    * Add custom source code generators in the compile step
