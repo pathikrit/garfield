@@ -4,8 +4,6 @@ name := "play-slick-evolutions-plugin"
 
 organization := "com.papauschek"
 
-//TODO: scalaVersion := "2.11.4"
-
 libraryDependencies ++= Seq(
   jdbc,
   cache, // play cache external module
