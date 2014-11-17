@@ -2,9 +2,7 @@ name := "garfield"
 
 version := "0.0.1-SNAPSHOT"
 
-lazy val root = (project in file(".")).enablePlugins(PlayScala).dependsOn(playSlickPlugin)
-
-lazy val playSlickPlugin = file(new File("./play-slick-evolutions-plugin").getAbsolutePath)
+lazy val root = (project in file(".")).enablePlugins(PlayScala)
 
 scalaVersion := "2.10.4"
 
@@ -31,9 +29,9 @@ resolvers ++= Seq(
 )
 
 libraryDependencies ++= Seq(
-  jdbc,
-  anorm,
-  cache,
+  play.PlayImport.jdbc,
+  play.PlayImport.anorm,
+  play.PlayImport.cache,
   "org.postgresql" % "postgresql" % "9.3-1102-jdbc4",
   "com.typesafe.play" %% "play-slick" % "0.8.0"
 )
