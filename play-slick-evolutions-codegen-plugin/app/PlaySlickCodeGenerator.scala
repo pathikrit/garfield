@@ -49,17 +49,15 @@ object PlaySlickCodeGenerator {
     }
 
     // config for generator database - TODO: default to parent db_codegen
-    val driver = dbConfig.getString("codegen.driver").getOrElse("org.h2.Driver")
-    val maybeMode = dbConfig.getString("codegen.mode")
-    val baseUrl = dbConfig.getString("codegen.url").getOrElse("jdbc:h2:mem:generator")
-    val url = Seq(Some(baseUrl), maybeMode).flatten.mkString(";MODE=")
+    val tempDriver = dbConfig.getString("codegen.driver").getOrElse("org.h2.Driver")
+    val tempUrl = dbConfig.getString("codegen.url").getOrElse("jdbc:h2:mem:generator")
 
     // create fake application using in-memory database
     val app = FakeApplication(
       path = new File("target/codegen_fake_app").getCanonicalFile,
       configuration = Configuration.from(Map(
-        s"db.$database.url" -> url,
-        s"db.$database.driver" -> driver)))
+        s"db.$database.url" -> tempUrl,
+        s"db.$database.driver" -> tempDriver)))
     val dbPlugin = new BoneCPPlugin(app)
     try  {
       val script = Evolutions.evolutionScript(dbPlugin.api, new File("."), dbPlugin.getClass.getClassLoader, database)
@@ -75,7 +73,8 @@ object PlaySlickCodeGenerator {
         }
         val codeGen = new CustomCodeGenerator(model, database, config)
         val fileName = s"$outputContainer.scala"
-        codeGen.writeToFile(outputDriver.getClass.getCanonicalName, outputDir.getPath, outputPackage, outputContainer, fileName)
+        val outputProfile = outputDriver.getClass.getCanonicalName
+        codeGen.writeToFile(outputProfile.take(outputProfile.size - 1), outputDir.getPath, outputPackage, outputContainer, fileName)
         Some(new File(outputDir.getPath + "/" + outputPackage.replace(".","/") + "/" + fileName))
       }
     } finally  {
