@@ -97,3 +97,5 @@ RUNNING_PID
 # Activator #
 activator*
 
+# Travis #
+.dpl/

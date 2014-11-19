@@ -19,4 +19,4 @@ addSbtPlugin("com.typesafe.sbt" % "sbt-mocha" % "1.0.0")
 
 lazy val root = (project in file(".")).dependsOn(playSlickPlugin)
 
-lazy val playSlickPlugin = file(new File("./play-slick-evolutions-plugin").getAbsolutePath)
+lazy val playSlickPlugin = file(new File("./play-slick-evolutions-codegen-plugin").getAbsolutePath)
