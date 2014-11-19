@@ -1,6 +1,6 @@
 Garfield
 ===
-
+[![Dependency Status](https://www.versioneye.com/user/projects/546b7fcc81010682aa0000d2/badge.svg?style=flat)](https://www.versioneye.com/user/projects/546b7fcc81010682aa0000d2)
 [![Build Status](https://travis-ci.org/pathikrit/garfield.svg)](https://travis-ci.org/pathikrit/garfield)
 [![Codacy Badge](https://www.codacy.com/project/badge/49b2ca67eae84e79983f58591db206bf)](https://www.codacy.com)
 
