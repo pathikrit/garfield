@@ -43,8 +43,8 @@ object PlaySlickCodeGenerator {
 
     val outputPackage = dbConfig.getString("codegen.package").getOrElse(s"db.$database")
     val outputContainer = dbConfig.getString("codegen.container").getOrElse("daos")
-    val outputProfile = dbConfig.getString(s"driver") match {
-      case Some("org.postgresql.Driver") => "scala.slick.driver.PostgresDriver"
+    val outputDriver = dbConfig.getString("driver") match {
+      case Some("org.postgresql.Driver") => scala.slick.driver.PostgresDriver
       case d => throw new IllegalArgumentException(s"Unknown db.$database.driver = $d")
     }
 
@@ -56,7 +56,7 @@ object PlaySlickCodeGenerator {
 
     // create fake application using in-memory database
     val app = FakeApplication(
-      path = new File("dbgen").getCanonicalFile,
+      path = new File("target/codegen_fake_app").getCanonicalFile,
       configuration = Configuration.from(Map(
         s"db.$database.url" -> url,
         s"db.$database.driver" -> driver)))
@@ -69,17 +69,13 @@ object PlaySlickCodeGenerator {
       } else  {
         Evolutions.applyScript(dbPlugin.api, database, script, autocommit = true)
         val db = Database.forDataSource(dbPlugin.api.getDataSource(database))
-        val driver =  outputProfile match {
-          case "scala.slick.driver.PostgresDriver" => scala.slick.driver.PostgresDriver
-          case p => throw new IllegalStateException(s"Unknown profile: $p")
-        }
         import Database.dynamicSession
         val model = db withDynSession {
-          driver.createModel()
+          outputDriver.createModel()
         }
         val codeGen = new CustomCodeGenerator(model, database, config)
         val fileName = s"$outputContainer.scala"
-        codeGen.writeToFile(outputProfile, outputDir.getPath, outputPackage, outputContainer, fileName)
+        codeGen.writeToFile(outputDriver.getClass.getCanonicalName, outputDir.getPath, outputPackage, outputContainer, fileName)
         Some(new File(outputDir.getPath + "/" + outputPackage.replace(".","/") + "/" + fileName))
       }
     } finally  {
