@@ -5,14 +5,10 @@ import java.io.File
 import play.api._
 import play.api.db.BoneCPPlugin
 import play.api.db.evolutions.Evolutions
-import play.api.Application
 
-import scala.slick.jdbc.meta.{MTable, createModel}
-import scala.slick.driver.PostgresDriver.simple._
-import scala.slick.driver.{PostgresDriver, H2Driver}
-import scala.slick.model.Model
+import slick.driver.JdbcDriver.backend.Database
 
-import com.typesafe.config.{ConfigFactory, Config}
+import com.typesafe.config.ConfigFactory
 
 /**
  *  This code generator runs Play Framework Evolutions against a provided database (in config)
@@ -32,6 +28,8 @@ object PlaySlickCodeGenerator {
       }
     } catch {
       case NonFatal(e) => throw new PlayException("Codegen error", e.getMessage, e)
+    } finally {
+      println("Exiting codegen")
     }
   }
 
@@ -44,13 +42,13 @@ object PlaySlickCodeGenerator {
     println(s"Generating slick code for db = $database ...")
 
     val outputPackage = dbConfig.getString("codegen.package").getOrElse(s"db.$database")
-    val outputContainer = dbConfig.getString("codegen.container").getOrElse("dao")
+    val outputContainer = dbConfig.getString("codegen.container").getOrElse("daos")
     val outputProfile = dbConfig.getString(s"driver") match {
       case Some("org.postgresql.Driver") => "scala.slick.driver.PostgresDriver"
       case d => throw new IllegalArgumentException(s"Unknown db.$database.driver = $d")
     }
 
-    // config for generator database
+    // config for generator database - TODO: default to parent db_codegen
     val driver = dbConfig.getString("codegen.driver").getOrElse("org.h2.Driver")
     val maybeMode = dbConfig.getString("codegen.mode")
     val baseUrl = dbConfig.getString("codegen.url").getOrElse("jdbc:h2:mem:generator")
@@ -71,19 +69,17 @@ object PlaySlickCodeGenerator {
       } else  {
         Evolutions.applyScript(dbPlugin.api, database, script, autocommit = true)
         val db = Database.forDataSource(dbPlugin.api.getDataSource(database))
-        val model = db.withSession {implicit session =>
-          outputProfile match {
-            case "scala.slick.driver.PostgresDriver" =>PostgresDriver.createModel()
-            case p => throw new IllegalStateException(s"Unknown profile: $p")
-          }
+        val driver =  outputProfile match {
+          case "scala.slick.driver.PostgresDriver" => scala.slick.driver.PostgresDriver
+          case p => throw new IllegalStateException(s"Unknown profile: $p")
         }
-
-        // generate slick db code and write to file
+        import Database.dynamicSession
+        val model = db withDynSession {
+          driver.createModel()
+        }
         val codeGen = new CustomCodeGenerator(model, database, config)
         val fileName = s"$outputContainer.scala"
         codeGen.writeToFile(outputProfile, outputDir.getPath, outputPackage, outputContainer, fileName)
-
-        // return path of generated file
         Some(new File(outputDir.getPath + "/" + outputPackage.replace(".","/") + "/" + fileName))
       }
     } finally  {
