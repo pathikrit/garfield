@@ -1,6 +1,6 @@
 package controllers
 
-import db.default.dao
+import db.default.daos
 import play.api.mvc._
 
 object Application extends Controller {
@@ -10,7 +10,7 @@ object Application extends Controller {
   }
 
   def ping = Action {
-    import dao.PeopleRow
+    import daos.PeopleRow
     Ok("ping")
   }
 }
